@@ -2309,7 +2309,9 @@ class GoogleMapsModule extends AbstractModule implements ModuleConfigInterface, 
         echo '"><i class="icon-loading-large"></i></div>';
         echo '<script src="', $this->googleMapsScript(), '"></script>';
 
-        $plzoom = $latlng['pl_zoom']; // Map zoom level
+        if (is_array($latlng)) {
+          $plzoom = $latlng['pl_zoom']; // Map zoom level
+        }
 
         if (Auth::isAdmin()) {
             $placecheck_url = 'module.php?mod=googlemap&amp;mod_action=admin_placecheck';
@@ -2580,7 +2582,7 @@ class GoogleMapsModule extends AbstractModule implements ModuleConfigInterface, 
 						url:    "https://maps.google.com/mapfiles/marker.png",
 						size:   new google.maps.Size(20, 34),
 						origin: new google.maps.Point(0,0),
-						anchor: new google.maps.Point(9, 34)						
+						anchor: new google.maps.Point(9, 34)
 					};
 				}
 				var posn = new google.maps.LatLng(0,0);
