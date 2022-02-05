@@ -2340,21 +2340,26 @@ class GoogleMapsModule extends AbstractModule implements ModuleConfigInterface, 
 
             global $pl_lati, $pl_long;
             if ($level >= 1) {
-                $pl_lati = strtr($latlng['pl_lati'], array('N' => '', 'S' => '-', ',' => '.')); // WT_placelocation lati
-                $pl_long = strtr($latlng['pl_long'], array('E' => '', 'W' => '-', ',' => '.')); // WT_placelocation long
+                if(is_array($latlng)) {
+                  $pl_lati = strtr($latlng['pl_lati'], array('N' => '', 'S' => '-', ',' => '.')); // WT_placelocation lati
+                  $pl_long = strtr($latlng['pl_long'], array('E' => '', 'W' => '-', ',' => '.')); // WT_placelocation long
 
-                // Check if Streetview location parameters are stored in database
-                $placeid  = $latlng['pl_id']; // Placelocation place id
-                $sv_lat   = $latlng['sv_lati']; // StreetView Point of View Latitude
-                $sv_lng   = $latlng['sv_long']; // StreetView Point of View Longitude
-                $sv_dir   = $latlng['sv_bearing']; // StreetView Point of View Direction (degrees from North)
-                $sv_pitch = $latlng['sv_elevation']; // StreetView Point of View Elevation (+90 to -90 degrees (+=down, -=up)
-                $sv_zoom  = $latlng['sv_zoom']; // StreetView Point of View Zoom (0, 1, 2 or 3)
+                  // Check if Streetview location parameters are stored in database
+                  $placeid  = $latlng['pl_id']; // Placelocation place id
+                  $sv_lat   = $latlng['sv_lati']; // StreetView Point of View Latitude
+                  $sv_lng   = $latlng['sv_long']; // StreetView Point of View Longitude
+                  $sv_dir   = $latlng['sv_bearing']; // StreetView Point of View Direction (degrees from North)
+                  $sv_pitch = $latlng['sv_elevation']; // StreetView Point of View Elevation (+90 to -90 degrees (+=down, -=up)
+                  $sv_zoom  = $latlng['sv_zoom']; // StreetView Point of View Zoom (0, 1, 2 or 3)
 
-                // Check if Street View Lati/Long are the default of 0, if so use regular Place Lati/Long to set an initial location for the panda
-                if ($latlng['sv_lati'] == 0 && $latlng['sv_long'] == 0) {
-                        $sv_lat = $pl_lati;
-                        $sv_lng = $pl_long;
+                  // Check if Street View Lati/Long are the default of 0, if so use regular Place Lati/Long to set an initial location for the panda
+                  if ($latlng['sv_lati'] == 0 && $latlng['sv_long'] == 0) {
+                          $sv_lat = $pl_lati;
+                          $sv_lng = $pl_long;
+                  }
+                }
+                else {
+                  $sv_lng = $sv_lat = $sv_dir = $sv_pitch = $sv_zoom = $placeid = NULL;
                 }
                 $frameheight = $this->getSetting('GM_PH_YSIZE') + 35; // Add height of buttons
 
