@@ -246,7 +246,9 @@ class Filter
                 )
             );
 
-            return $tmp[$variable] ?: array();
+            if (is_array($tmp)) {
+              return $tmp[$variable] ?: array();
+            }
         } else {
             // PHP5.3 requires the $tmp variable
             $tmp = filter_input_array(
