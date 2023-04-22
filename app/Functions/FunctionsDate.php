@@ -32,6 +32,9 @@ class FunctionsDate
      */
     public static function getAgeAtEvent($age_string)
     {
+        if(!isset($age_string)) {
+            $age_string = "";
+        }
         switch (strtoupper($age_string)) {
             case 'CHILD':
                 return I18N::translate('Child');

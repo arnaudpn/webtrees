@@ -40,6 +40,9 @@ class Filter
      */
     public static function escapeHtml($string)
     {
+	if (!isset($string)) {
+            $string="";
+        }
         if (defined('ENT_SUBSTITUTE')) {
             // PHP5.4 allows us to substitute invalid UTF8 sequences
             return htmlspecialchars($string, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
@@ -57,7 +60,9 @@ class Filter
      */
     public static function escapeUrl($string)
     {
-        return rawurlencode($string);
+        if (isset($string)) {
+            return rawurlencode($string);
+        }
     }
 
     /**
@@ -69,6 +74,9 @@ class Filter
      */
     public static function escapeJs($string)
     {
+	if (is_null($string)) {
+            $string ="";
+        }
         return preg_replace_callback('/[^A-Za-z0-9,. _]/Su', function ($x) {
             if (strlen($x[0]) == 1) {
                 return sprintf('\\x%02X', ord($x[0]));
@@ -110,7 +118,9 @@ class Filter
      */
     public static function unescapeHtml($string)
     {
-        return html_entity_decode(strip_tags($string), ENT_QUOTES, 'UTF-8');
+        if (!is_null($string)) {
+            return html_entity_decode(strip_tags($string), ENT_QUOTES, 'UTF-8');
+        }
     }
 
     /**
@@ -263,10 +273,8 @@ class Filter
                     ),
                 )
             );
-
-            if (is_array($tmp)) {
-              return $tmp[$variable] ?: array();
-            }
+            
+	    if (is_array($tmp)) return $tmp[$variable] ?: array();
         }
     }
 

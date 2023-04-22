@@ -6722,8 +6722,8 @@ class Stats
             if ($value < 0) {
                 $value = 0;
             }
-            $first  = (int) ($value / 64);
-            $second = $value % 64;
+            $first  = (int) round($value / 64);
+            $second = ((int) round($value)) % 64;
             $encoding .= $xencoding[(int) $first] . $xencoding[(int) $second];
         }
 

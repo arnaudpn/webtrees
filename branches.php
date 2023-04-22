@@ -47,15 +47,6 @@ $controller
                         <input data-autocomplete-type="SURN" type="text" name="surname" id="SURN" value="<?php echo Filter::escapeHtml($controller->getSurname()); ?>" dir="auto">
                         <input type="hidden" name="ged" id="ged" value="<?php echo $WT_TREE->getNameHtml(); ?>">
                         <input type="submit" value="<?php echo /* I18N: A button label. */ I18N::translate('view'); ?>">
-                        <p>
-                            <?php echo I18N::translate('Phonetic search'); ?>
-                        </p>
-                        <p>
-                            <input type="checkbox" name="soundex_std" id="soundex_std" value="1" <?php echo $controller->getSoundexStd() ? 'checked' : ''; ?>>
-                            <label for="soundex_std"><?php echo I18N::translate('Russell'); ?></label>
-                            <input type="checkbox" name="soundex_dm" id="soundex_dm" value="1" <?php echo $controller->getSoundexDm() ? 'checked' : ''; ?>>
-                            <label for="soundex_dm"><?php echo I18N::translate('Daitch-Mokotoff'); ?></label>
-                        </p>
                     </td>
                 </tr>
             </tbody>

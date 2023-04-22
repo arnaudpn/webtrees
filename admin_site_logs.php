@@ -184,6 +184,11 @@ switch ($action) {
         return;
 }
 
+if (is_null($text)) $text = "";
+if (is_null($ip)) $ip = "";
+if (is_null($user)) $user = "";
+if (is_null($gedc)) $gedc = "";
+
 $controller
     ->pageHeader()
     ->addExternalJavascript(WT_JQUERY_DATATABLES_JS_URL)

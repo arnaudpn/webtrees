@@ -338,7 +338,7 @@ if (count($controller->people) > 0) {
             $mod = 1;
         }
         for ($i = $controller->baseyear + 1; $i < $controller->topyear; $i++) {
-            if ($i % $mod === 0) {
+            if ($i % (int) round($mod) === 0) {
                 echo '<div id="scale' . $i . '" style="position:absolute; ' . (I18N::direction() === 'ltr' ? 'left: ' . $basexoffset : 'right: ' . $basexoffset) . 'px; top:' . ($baseyoffset + (($i - $controller->baseyear) * $controller->scale) - $controller->scale / 2) . 'px; font-size: 7pt; text-align:' . (I18N::direction() === 'ltr' ? 'left' : 'right') . ';">';
                 echo $i . '—';
                 echo '</div>';

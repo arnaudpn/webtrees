@@ -224,6 +224,9 @@ class SearchController extends PageController
         $query_terms = array();
         $query       = $this->query;
         // Words in double quotes stay together
+        if(!isset($query)) {
+            $query ="";
+        }
         while (preg_match('/"([^"]+)"/', $query, $match)) {
             $query_terms[] = trim($match[1]);
             $query         = str_replace($match[0], '', $query);

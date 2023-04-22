@@ -758,6 +758,7 @@ class I18N
      */
     public static function textScript($string)
     {
+        if (is_null($string)) $string = "";
         $string = strip_tags($string); // otherwise HTML tags show up as latin
         $string = html_entity_decode($string, ENT_QUOTES, 'UTF-8'); // otherwise HTML entities show up as latin
         $string = str_replace(array('@N.N.', '@P.N.'), '', $string); // otherwise unknown names show up as latin

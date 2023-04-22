@@ -223,7 +223,7 @@ class FanchartController extends ChartController
             // clean current generation area
             $deg2 = 360 + ($fandeg - 180) / 2;
             $deg1 = $deg2 - $fandeg;
-            imagefilledarc($image, $cx, $cy, $rx, $rx, $deg1, $deg2, $bgcolor, IMG_ARC_PIE);
+            imagefilledarc($image, (int) round ($cx), (int) round ($cy), (int) round ($rx), (int) round ($rx), (int) round ($deg1), (int) round ($deg2), $bgcolor, IMG_ARC_PIE);
             $rx -= 3;
 
             // calculate new angle
@@ -263,7 +263,7 @@ class FanchartController extends ChartController
                             break;
                     }
 
-                    imagefilledarc($image, $cx, $cy, $rx, $rx, $deg1, $deg2, $bg, IMG_ARC_PIE);
+                    imagefilledarc($image, (int) round ($cx), (int) round ($cy), (int) round ($rx), (int) round ($rx), (int) round ($deg1), (int) round ($deg2), $bg, IMG_ARC_PIE);
 
                     // split and center text by lines
                     $wmax = (int) ($angle * 7 / Theme::theme()->parameter('chart-font-size') * $scale);
@@ -308,7 +308,7 @@ class FanchartController extends ChartController
                     imagettftext(
                         $image,
                         Theme::theme()->parameter('chart-font-size'),
-                        $tangle, $tx, $ty,
+                        $tangle, (int) round($tx), (int) round($ty),
                         $color, Theme::theme()->parameter('chart-font-name'),
                         $text
                     );
@@ -375,7 +375,7 @@ class FanchartController extends ChartController
                 return $html . $imagemap . '<div id="fan_chart_img"><img src="' . WT_SCRIPT_NAME . '?rootid=' . $this->root->getXref() . '&amp;fan_style=' . $this->fan_style . '&amp;generations=' . $this->generations . '&amp;fan_width=' . $this->fan_width . '&amp;img=1" width="' . $fanw . '" height="' . $fanh . '" alt="' . strip_tags($this->getPageTitle()) . '" usemap="#fanmap"></div>';
 
             case 'png':
-                imagestringup($image, 1, $fanw - 10, $fanh / 3, WT_BASE_URL, $color);
+                imagestringup($image, 1, (int) round($fanw - 10), (int) round($fanh / 3), WT_BASE_URL, $color);
                 ob_start();
                 imagepng($image);
                 imagedestroy($image);

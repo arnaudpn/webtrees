@@ -61,20 +61,22 @@ class Date
     public function __construct($date)
     {
         // Extract any explanatory text
-        if (preg_match('/^(.*) ?[(](.*)[)]/', $date, $match)) {
-            $date       = $match[1];
-            $this->text = $match[2];
-        }
-        if (preg_match('/^(FROM|BET) (.+) (AND|TO) (.+)/', $date, $match)) {
-            $this->qual1 = $match[1];
-            $this->date1 = $this->parseDate($match[2]);
-            $this->qual2 = $match[3];
-            $this->date2 = $this->parseDate($match[4]);
-        } elseif (preg_match('/^(TO|FROM|BEF|AFT|CAL|EST|INT|ABT) (.+)/', $date, $match)) {
-            $this->qual1 = $match[1];
-            $this->date1 = $this->parseDate($match[2]);
-        } else {
-            $this->date1 = $this->parseDate($date);
+	if(isset($date)) {
+            if (preg_match('/^(.*) ?[(](.*)[)]/', $date, $match)) {
+                $date       = $match[1];
+                $this->text = $match[2];
+            }
+            if (preg_match('/^(FROM|BET) (.+) (AND|TO) (.+)/', $date, $match)) {
+                $this->qual1 = $match[1];
+                $this->date1 = $this->parseDate($match[2]);
+                $this->qual2 = $match[3];
+                $this->date2 = $this->parseDate($match[4]);
+            } elseif (preg_match('/^(TO|FROM|BEF|AFT|CAL|EST|INT|ABT) (.+)/', $date, $match)) {
+                $this->qual1 = $match[1];
+                $this->date1 = $this->parseDate($match[2]);
+            } else {
+                $this->date1 = $this->parseDate($date);
+            }
         }
     }
 
@@ -236,23 +238,35 @@ class Date
 
         // Two dates with text before, between and after
         $q1 = $this->qual1;
-        $d1 = $this->date1->format($date_format, $this->qual1);
+	if (is_null($this->qual1)) {
+            $this_qual1 = "";
+        } else {
+            $this_qual1 = $this->qual1;
+        }
+	if (!is_null($this->date1)) {
+            $d1 = $this->date1->format($date_format, $this_qual1);
+        } else {
+            $d1 = '';
+        }
         $q2 = $this->qual2;
         if ($this->date2 === null) {
             $d2 = '';
         } else {
             $d2 = $this->date2->format($date_format, $this->qual2);
         }
-        // Con vert to other calendars, if requested
+        // Convert to other calendars, if requested
         $conv1 = '';
         $conv2 = '';
         foreach ($calendar_format as $cal_fmt) {
             if ($cal_fmt != 'none') {
-                $d1conv = $this->date1->convertToCalendar($cal_fmt);
-                if ($d1conv->inValidRange()) {
-                    $d1tmp = $d1conv->format($date_format, $this->qual1);
-                } else {
-                    $d1tmp = '';
+                if (!is_null($this->date1)) {
+                    $d1conv = $this->date1->convertToCalendar($cal_fmt);
+                }
+                $d1tmp = '';
+                if (isset($d1conv)) {
+                    if ($d1conv->inValidRange()) {
+                        $d1tmp = $d1conv->format($date_format, $this->qual1);
+                    }
                 }
                 if ($this->date2 === null) {
                     $d2conv = null;
@@ -380,7 +394,9 @@ class Date
      */
     public function minimumJulianDay()
     {
-        return $this->minimumDate()->minJD;
+	if(isset($this->minimumDate()->minJD)) {
+            return $this->minimumDate()->minJD;
+        }
     }
 
     /**
@@ -390,7 +406,9 @@ class Date
      */
     public function maximumJulianDay()
     {
-        return $this->maximumDate()->maxJD;
+        if(isset($this->maximumDate()->maxJD)) {
+            return $this->maximumDate()->maxJD;
+        }
     }
 
     /**
@@ -504,7 +522,9 @@ class Date
         } else {
             // If dates overlap, then can’t calculate age.
             if (self::compare($d1, $d2)) {
-                return $d1->date1->getAge(true, $d2->minimumJulianDay(), true);
+                if(isset($d1->date1)) {
+                    return $d1->date1->getAge(true, $d2->minimumJulianDay(), true);
+                }
             } elseif (self::compare($d1, $d2) == 0 && $d1->minimumJulianDay() == $d2->minimumJulianDay()) {
                 return '0d';
             } else {

@@ -55,8 +55,6 @@ class BranchesController extends PageController
         parent::__construct();
 
         $this->surname     = Filter::get('surname');
-        $this->soundex_std = Filter::getBool('soundex_std');
-        $this->soundex_dm  = Filter::getBool('soundex_dm');
 
         if ($this->surname) {
             $this->setPageTitle(/* I18N: %s is a surname */
@@ -82,26 +80,6 @@ class BranchesController extends PageController
     }
 
     /**
-     * Should we use Standard phonetic matching
-     *
-     * @return bool
-     */
-    public function getSoundexStd()
-    {
-        return $this->soundex_std;
-    }
-
-    /**
-     * Should we use Daitch-Mokotov phonetic matching
-     *
-     * @return bool
-     */
-    public function getSoundexDm()
-    {
-        return $this->soundex_dm;
-    }
-
-    /**
      * Fetch all individuals with a matching surname
      */
     private function loadIndividuals()
@@ -116,24 +94,6 @@ class BranchesController extends PageController
             " AND n_type != ?" .
             " AND (n_surn = ? OR n_surname = ?";
         $args = array($WT_TREE->getTreeId(), '_MARNM', $this->surname, $this->surname);
-        if ($this->soundex_std) {
-            $sdx = Soundex::russell($this->surname);
-            if ($sdx !== null) {
-                foreach (explode(':', $sdx) as $value) {
-                    $sql .= " OR n_soundex_surn_std LIKE CONCAT('%', ?, '%')";
-                    $args[] = $value;
-                }
-            }
-        }
-        if ($this->soundex_dm) {
-            $sdx = Soundex::daitchMokotoff($this->surname);
-            if ($sdx !== null) {
-                foreach (explode(':', $sdx) as $value) {
-                    $sql .= " OR n_soundex_surn_dm LIKE CONCAT('%', ?, '%')";
-                    $args[] = $value;
-                }
-            }
-        }
         $sql .= ')';
         $rows              = Database::prepare($sql)->execute($args)->fetchAll();
         $this->individuals = array();
@@ -153,7 +113,7 @@ class BranchesController extends PageController
     private function loadAncestors(Individual $ancestor, $sosa)
     {
         if ($ancestor) {
-            $this->ancestors[$sosa] = $ancestor;
+            $this->ancestors[(int) $sosa] = $ancestor;
             foreach ($ancestor->getChildFamilies() as $family) {
                 foreach ($family->getSpouses() as $parent) {
                     $this->loadAncestors($parent, $sosa * 2 + ($parent->getSex() == 'F' ? 1 : 0));
@@ -198,13 +158,7 @@ class BranchesController extends PageController
         // A person has many names. Select the one that matches the searched surname
         $person_name = '';
         foreach ($individual->getAllNames() as $name) {
-            list($surn1) = explode(",", $name['sort']);
-            if (// one name is a substring of the other
-                stripos($surn1, $this->surname) !== false ||
-                stripos($this->surname, $surn1) !== false ||
-                // one name sounds like the other
-                $this->soundex_std && Soundex::compare(Soundex::russell($surn1), Soundex::russell($this->surname)) ||
-                $this->soundex_dm && Soundex::compare(Soundex::daitchMokotoff($surn1), Soundex::daitchMokotoff($this->surname))
+            if (stripos($this->surname, $name['surname']) !== false
             ) {
                 $person_name = $name['full'];
                 break;

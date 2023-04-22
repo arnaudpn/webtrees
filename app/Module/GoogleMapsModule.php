@@ -807,7 +807,7 @@ class GoogleMapsModule extends AbstractModule implements ModuleConfigInterface, 
                 } else {
                     $latlongval[$i] = $this->getLatitudeAndLongitudeFromPlaceLocation($person->getBirthPlace());
                 }
-                if ($latlongval[$i]) {
+                if (is_array($latlongval[$i])) {
                     $lat[$i] = strtr($latlongval[$i]->pl_lati, array('N' => '', 'S' => '-', ',' => '.'));
                     $lon[$i] = strtr($latlongval[$i]->pl_long, array('N' => '', 'S' => '-', ',' => '.'));
                     if ($lat[$i] && $lon[$i]) {
@@ -1194,7 +1194,7 @@ class GoogleMapsModule extends AbstractModule implements ModuleConfigInterface, 
                 $data .= '</div>';
 
                 $latlongval[$i] = $this->getLatitudeAndLongitudeFromPlaceLocation($person->getBirthPlace());
-                if ($latlongval[$i]) {
+                if (is_array($latlongval[$i])) {
                     $lat[$i] = (double) strtr($latlongval[$i]->pl_lati, array('N' => '', 'S' => '-', ',' => '.'));
                     $lon[$i] = (double) strtr($latlongval[$i]->pl_long, array('E' => '', 'W' => '-', ',' => '.'));
                     if ($lat[$i] || $lon[$i]) {

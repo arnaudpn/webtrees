@@ -1154,24 +1154,28 @@ class Individual extends GedcomRecord
         // Extract the structured name parts - use for "sortable" names and indexes
         ////////////////////////////////////////////////////////////////////////////
 
-        $sublevel = 1;
+	$sublevel = 1;
         if (is_array($gedcom)) {
-          $sublevel += (int) $gedcom[0];
+	  $sublevel += (int) $gedcom[0];
+	}
+        if(isset($gedcom)) {
+            $NPFX     = preg_match("/\n{$sublevel} NPFX (.+)/", $gedcom, $match) ? $match[1] : '';
+            $GIVN     = preg_match("/\n{$sublevel} GIVN (.+)/", $gedcom, $match) ? $match[1] : '';
+            $SURN     = preg_match("/\n{$sublevel} SURN (.+)/", $gedcom, $match) ? $match[1] : '';
+            $NSFX     = preg_match("/\n{$sublevel} NSFX (.+)/", $gedcom, $match) ? $match[1] : '';
+            $NICK     = preg_match("/\n{$sublevel} NICK (.+)/", $gedcom, $match) ? $match[1] : '';
         }
-        $NPFX     = preg_match("/\n{$sublevel} NPFX (.+)/", $gedcom, $match) ? $match[1] : '';
-        $GIVN     = preg_match("/\n{$sublevel} GIVN (.+)/", $gedcom, $match) ? $match[1] : '';
-        $SURN     = preg_match("/\n{$sublevel} SURN (.+)/", $gedcom, $match) ? $match[1] : '';
-        $NSFX     = preg_match("/\n{$sublevel} NSFX (.+)/", $gedcom, $match) ? $match[1] : '';
-        $NICK     = preg_match("/\n{$sublevel} NICK (.+)/", $gedcom, $match) ? $match[1] : '';
 
         // SURN is an comma-separated list of surnames...
-        if ($SURN) {
+        if (isset($SURN)) {
             $SURNS = preg_split('/ *, */', $SURN);
         } else {
             $SURNS = array();
         }
         // ...so is GIVN - but nobody uses it like that
-        $GIVN = str_replace('/ *, */', ' ', $GIVN);
+        if (isset($GIVN)) {
+            $GIVN = str_replace('/ *, */', ' ', $GIVN);
+        }
 
         ////////////////////////////////////////////////////////////////////////////
         // Extract the components from NAME - use for the "full" names
@@ -1209,7 +1213,7 @@ class Individual extends GedcomRecord
         }
 
         // If we don’t have a GIVN record, extract it from the NAME
-        if (!$GIVN) {
+        if (!isset($GIVN)) {
             $GIVN = preg_replace(
                 array(
                     '/ ?\/.*\/ ?/', // remove surname
@@ -1228,7 +1232,7 @@ class Individual extends GedcomRecord
         }
 
         // Add placeholder for unknown given name
-        if (!$GIVN) {
+        if (!isset($GIVN)) {
             $GIVN = '@P.N.';
             $pos  = strpos($full, '/');
             $full = substr($full, 0, $pos) . '@P.N. ' . substr($full, $pos);
@@ -1236,15 +1240,17 @@ class Individual extends GedcomRecord
 
         // GEDCOM nicknames should be specificied in a NICK field, or in the
         // NAME filed, surrounded by ASCII quotes (or both).
-        if ($NICK && strpos($full, '"' . $NICK . '"') === false) {
-            // A NICK field is present, but not included in the NAME.
-            $pos = strpos($full, '/');
-            if ($pos === false) {
-                // No surname - just append it
-                $full .= ' "' . $NICK . '"';
-            } else {
-                // Insert before surname
-                $full = substr($full, 0, $pos) . '"' . $NICK . '" ' . substr($full, $pos);
+	if(isset($NICK)) {
+            if ($NICK && strpos($full, '"' . $NICK . '"') === false) {
+                // A NICK field is present, but not included in the NAME.
+                $pos = strpos($full, '/');
+                if ($pos === false) {
+                    // No surname - just append it
+                    $full .= ' "' . $NICK . '"';
+                } else {
+                    // Insert before surname
+                    $full = substr($full, 0, $pos) . '"' . $NICK . '" ' . substr($full, $pos);
+                }
             }
         }
 

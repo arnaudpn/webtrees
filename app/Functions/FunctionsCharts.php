@@ -380,7 +380,9 @@ class FunctionsCharts
                         $div  = $famids[$f]->getFirstFact('DIV');
                         if ($marr) {
                             // marriage date
-                            echo $marr->getDate()->minimumDate()->format('%Y');
+                            if(null !== $marr->getDate()->minimumDate()) {
+                                echo $marr->getDate()->minimumDate()->format('%Y');
+                            }
                             // divorce date
                             if ($div) {
                                 echo '–', $div->getDate()->minimumDate()->format('%Y');

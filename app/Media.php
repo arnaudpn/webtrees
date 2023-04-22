@@ -419,6 +419,7 @@ class Media extends GedcomRecord
 
         if (!is_array($imgsize) || empty($imgsize['0'])) {
             // this is not an image, OR the file doesn’t exist OR it is a url
+            $imgsize          = [];
             $imgsize[0]       = 0;
             $imgsize[1]       = 0;
             $imgsize['adjW']  = 0;
@@ -582,15 +583,17 @@ class Media extends GedcomRecord
         // Use a thumbnail image.
         if (!$this->isExternal()) {
             try {
-                $imgsize = getimagesize($this->getServerFilename('thumb'));
-                $image   =
-                    '<img' .
-                    ' dir="' . 'auto' . '"' . // For the tool-tip
-                    ' src="' . $this->getHtmlUrlDirect('thumb') . '"' .
-                    ' alt="' . strip_tags($this->getFullName()) . '"' .
-                    ' title="' . strip_tags($this->getFullName()) . '"' .
-                    ' ' . $imgsize[3] . // height="yyy" width="xxx"
-                    '>';
+		if(!is_null($this->getServerFilename('thumb'))) {
+                    $imgsize = getimagesize($this->getServerFilename('thumb'));
+                    $image   =
+                        '<img' .
+                        ' dir="' . 'auto' . '"' . // For the tool-tip
+                        ' src="' . $this->getHtmlUrlDirect('thumb') . '"' .
+                        ' alt="' . strip_tags($this->getFullName()) . '"' .
+                        ' title="' . strip_tags($this->getFullName()) . '"' .
+                        ' ' . $imgsize[3] . // height="yyy" width="xxx"
+                        '>';
+                }
             } catch (Exception $ex) {
                 // Image file unreadable or Corrupt.
             }

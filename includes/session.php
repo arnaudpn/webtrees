@@ -24,15 +24,14 @@ use Symfony\Component\HttpFoundation\Request;
  * This is the bootstrap script, that is run on every request.
  */
 
-
-/*if (version_compare(PHP_VERSION, '7.4.0') >= 0) {
+if (version_compare(PHP_VERSION, '8.2.0') >= 0) {
     echo '<!DOCTYPE html><html lang="en"><body>';
     echo 'PHP ' . PHP_VERSION . ' detected.<br>';
     echo 'webtrees 1.7 requires PHP 5.3 - 7.3.<br>';
     echo 'Visit https://webtrees.net for more information.<br>';
     echo '</body></html>';
     exit;
-}*/
+}
 
 // WT_SCRIPT_NAME is defined in each script that the user is permitted to load.
 if (!defined('WT_SCRIPT_NAME')) {
@@ -461,7 +460,12 @@ if (WT_TIMESTAMP - Session::get('activity_time') >= 60) {
 }
 
 // Set the theme
-if (substr(WT_SCRIPT_NAME, 0, 5) === 'admin' || WT_SCRIPT_NAME === 'module.php' && substr(Filter::get('mod_action'), 0, 5) === 'admin') {
+if (is_null(Filter::get('mod_action'))) {
+    $filter_mod_action = "";
+} else {
+    $filter_mod_action = Filter::get('mod_action');
+}
+if (substr(WT_SCRIPT_NAME, 0, 5) === 'admin' || WT_SCRIPT_NAME === 'module.php' && substr($filter_mod_action, 0, 5) === 'admin') {
     // Administration scripts begin with “admin” and use a special administration theme
     Theme::theme(new AdministrationTheme)->init($WT_TREE);
 } else {
