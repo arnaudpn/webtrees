@@ -42,7 +42,7 @@ function send404AsImage()
     $height = 60;
     $im     = imagecreatetruecolor($width, $height); /* Create a black image */
     $bgc    = imagecolorallocate($im, 255, 255, 255); /* set background color */
-    imagefilledrectangle($im, 2, 2, $width - 4, $height - 4, $bgc); /* create a rectangle, leaving 2 px border */
+    imagefilledrectangle($im, 2, 2, (int) round($width) - 4, (int) round($height) - 4, $bgc); /* create a rectangle, leaving 2 px border */
 
     embedText($im, $error, 100, '255, 0, 0', WT_ROOT . Config::FONT_DEJAVU_SANS_TTF, 'top', 'left');
 
