@@ -183,7 +183,7 @@ function embedText($im, $text, $maxsize, $color, $font, $vpos, $hpos)
     if ($useTTF) {
         // if imagettftext throws errors, catch them with a custom error handler
         set_error_handler('\Fisharebest\Webtrees\\imagettftextErrorHandler');
-        imagettftext($im, $taille, $rotation, $pos_x, $pos_y, $textcolor, $font, $text);
+        imagettftext($im, $taille, $rotation, (int) round($pos_x), (int) round($pos_y), $textcolor, $    font, $text);
         restore_error_handler();
     }
     // Don’t use an ‘else’ here since imagettftextErrorHandler may have changed the value of $useTTF from true to false
