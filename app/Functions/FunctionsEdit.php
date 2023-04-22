@@ -869,6 +869,9 @@ class FunctionsEdit
                             $level2_checked = '';
                         break;
                     }
+                    if(is_null($bdm)) {
+                        $bdm = "";
+                    }
                     if (strpos($bdm, 'B') !== false) {
                         echo ' <label><input type="checkbox" name="SOUR_INDI" ', $level1_checked, ' value="1">', I18N::translate('Individual'), '</label>';
                         if (preg_match_all('/(' . WT_REGEX_TAG . ')/', $WT_TREE->getPreference('QUICK_REQUIRED_FACTS'), $matches)) {
