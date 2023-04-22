@@ -1251,6 +1251,9 @@ class GedcomRecord
      */
     public function updateFact($fact_id, $gedcom, $update_chan)
     {
+       if (is_null($gedcom)) { 
+           $gedcom = "";
+        }
         // MSDOS line endings will break things in horrible ways
         $gedcom = preg_replace('/[\r\n]+/', "\n", $gedcom);
         $gedcom = trim($gedcom);
