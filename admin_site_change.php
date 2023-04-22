@@ -234,7 +234,11 @@ switch ($action) {
 
         return;
 }
-
+if (!isset($oldged)) $oldged = "";
+if (!isset($newged)) $newged = ""; 
+if (!isset($xref)) $xref = ""; 
+if (!isset($user)) $user = "";
+if (!isset($gedc)) $gedc = "";
 $controller
     ->pageHeader()
     ->addExternalJavascript(WT_JQUERY_DATATABLES_JS_URL)
