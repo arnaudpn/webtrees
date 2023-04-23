@@ -163,16 +163,18 @@ class ReportHtmlTextbox extends ReportBaseTextbox
                 }
                 $lw = $this->elements[$i]->getWidth($renderer);
                 // Text is already gets the # LF
-                $cHT += $lw[2];
-                if ($lw[1] == 1) {
-                    $w = $lw[0];
-                } elseif ($lw[1] == 2) {
-                    $w = 0;
-                } else {
-                    $w += $lw[0];
-                }
-                if ($w > $cW) {
-                    $w = $lw[0];
+                if (is_array($lw)) {
+                    $cHT += $lw[2];
+                    if ($lw[1] == 1) {
+                        $w = $lw[0];
+                    } elseif ($lw[1] == 2) {
+                        $w = 0;
+                    } else {
+                        $w += $lw[0];
+                    }   
+                    if ($w > $cW) {
+                        $w = $lw[0];
+                    }   
                 }
                 // For anything else but text (images), get the height
                 $eH += $this->elements[$i]->getHeight($renderer);

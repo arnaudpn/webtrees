@@ -167,16 +167,18 @@ class ReportPdfTextbox extends ReportBaseTextbox
                 }
                 $lw = $this->elements[$i]->getWidth($renderer);
                 // Text is already gets the # LF
+                if (is_array($lw)) {
                 $cHT += $lw[2];
-                if ($lw[1] == 1) {
-                    $w = $lw[0];
-                } elseif ($lw[1] == 2) {
-                    $w = 0;
-                } else {
-                    $w += $lw[0];
-                }
-                if ($w > $cWT) {
-                    $w = $lw[0];
+                    if ($lw[1] == 1) {
+                        $w = $lw[0];
+                    } elseif ($lw[1] == 2) {
+                        $w = 0;
+                    } else {
+                        $w += $lw[0]; 
+                    }
+                    if ($w > $cWT) {
+                        $w = $lw[0];
+                    }
                 }
                 // Footnote is at the bottom of the page. No need to calculate it’s height or wrap the text!
                 // We are changing the margins anyway!
