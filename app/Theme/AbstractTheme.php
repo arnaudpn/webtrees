@@ -173,11 +173,13 @@ abstract class AbstractTheme
             );
 
             return
-                '<script async src="https://www.google-analytics.com/analytics.js"></script>' .
+                '<!-- Google tag (gtag.js) -->' .
+                '<script async src="https://www.googletagmanager.com/gtag/js?id=' . $analytics_id .'"></script>' .
                 '<script>' .
-                'window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;' .
-                'ga("create","' . $analytics_id . '","auto");' .
-                'ga("send", "pageview", ' . json_encode($dimensions) . ');' .
+                'window.dataLayer = window.dataLayer || [];' .
+                'function gtag(){dataLayer.push(arguments);}' .
+                'gtag(\'js\', new Date());' .
+                'gtag(\'config\', "' . $analytics_id .'");'.
                 '</script>';
         } else {
             return '';
