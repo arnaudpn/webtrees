@@ -570,7 +570,7 @@ $controller->pageHeader();
                 <span class="sr-only">Google Analytics</span>
             </label>
             <div class="col-sm-9">
-                <input type="text" class="form-control" id="GOOGLE_ANALYTICS_ID" name="GOOGLE_ANALYTICS_ID" value="<?php echo Filter::escapeHtml(Site::getPreference('GOOGLE_ANALYTICS_ID')) ?>" placeholder="UA-12345-6" maxlength="255" pattern="UA-[0-9]+-[0-9]+">
+                <input type="text" class="form-control" id="GOOGLE_ANALYTICS_ID" name="GOOGLE_ANALYTICS_ID" value="<?php echo Filter::escapeHtml(Site::getPreference('GOOGLE_ANALYTICS_ID')) ?>" placeholder="UA-12345-6" maxlength="255">
                 <p class="small text-muted">
                     <?php echo I18N::translate('Tracking and analytics are not added to the control panel.') ?>
                 </p>
