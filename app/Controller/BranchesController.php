@@ -23,7 +23,6 @@ use Fisharebest\Webtrees\GedcomCode\GedcomCodePedi;
 use Fisharebest\Webtrees\GedcomTag;
 use Fisharebest\Webtrees\I18N;
 use Fisharebest\Webtrees\Individual;
-use Fisharebest\Webtrees\Soundex;
 
 /**
  * Controller for the branches list
@@ -32,12 +31,6 @@ class BranchesController extends PageController
 {
     /** @var string Generate the branches for this surname */
     private $surname;
-
-    /** @var bool Whether to use Standard phonetic matching */
-    private $soundex_std;
-
-    /** @var bool Whether to use Daitch-Mokotov phonetic matching */
-    private $soundex_dm;
 
     /** @var Individual[] Everyone with the selected surname */
     private $individuals = array();
@@ -158,7 +151,10 @@ class BranchesController extends PageController
         // A person has many names. Select the one that matches the searched surname
         $person_name = '';
         foreach ($individual->getAllNames() as $name) {
-            if (stripos($this->surname, $name['surname']) !== false
+            list($surn1) = explode(",", $name['sort']);
+            if (// one name is a substring of the other
+                stripos($surn1, $this->surname) !== false ||
+                stripos($this->surname, $surn1) !== false
             ) {
                 $person_name = $name['full'];
                 break;

@@ -1167,13 +1167,15 @@ class Individual extends GedcomRecord
         }
 
         // SURN is an comma-separated list of surnames...
-        if (isset($SURN)) {
+        if(!isset($SURN)) $SURN = "";
+        if ($SURN) {
             $SURNS = preg_split('/ *, */', $SURN);
         } else {
             $SURNS = array();
         }
         // ...so is GIVN - but nobody uses it like that
-        if (isset($GIVN)) {
+        if(!isset($GIVN)) $GIVN = "";
+        if ($GIVN) {
             $GIVN = str_replace('/ *, */', ' ', $GIVN);
         }
 
