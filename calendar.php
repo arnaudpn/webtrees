@@ -54,6 +54,7 @@ if ($cal . $day . $month . $year === '') {
 // Create a CalendarDate from the parameters
 
 // We cannot display new-style/old-style years, so convert to new style
+if (!isset($year)) $year = 0;
 if (preg_match('/^(\d\d)\d\d\/(\d\d)$/', $year, $match)) {
     $year = $match[1] . $match[2];
 }

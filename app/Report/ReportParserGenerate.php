@@ -901,6 +901,7 @@ class ReportParserGenerate extends ReportParserBase
                     }
                 } else {
                     $addname = $record->getAddName();
+                    if(!isset($addname)) $addname = "";
                     $addname = preg_replace(
                         array('/<span class="starredname">/', '/<\/span><\/span>/', '/<\/span>/'),
                         array('«', '', '»'),
