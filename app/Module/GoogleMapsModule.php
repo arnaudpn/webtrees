@@ -2310,8 +2310,8 @@ class GoogleMapsModule extends AbstractModule implements ModuleConfigInterface, 
         echo '<script src="', $this->googleMapsScript(), '"></script>';
 
         if (is_array($latlng)) {
-          $plzoom = $latlng['pl_zoom']; // Map zoom level
-        }
+	  $plzoom = $latlng['pl_zoom']; // Map zoom level
+	}
 
         if (Auth::isAdmin()) {
             $placecheck_url = 'module.php?mod=googlemap&amp;mod_action=admin_placecheck';
@@ -2325,7 +2325,11 @@ class GoogleMapsModule extends AbstractModule implements ModuleConfigInterface, 
             if ($latlng && isset($latlng['pl_id'])) {
                 $adminplaces_url .= '&amp;parent=' . $latlng['pl_id'];
             }
-            $update_places_url = 'admin_trees_places.php?ged=' . $WT_TREE->getNameHtml() . '&amp;search=' . urlencode(implode(', ', array_reverse($parent)));
+            if(is_array($parent)) {
+                $update_places_url = 'admin_trees_places.php?ged=' . $WT_TREE->getNameHtml() . '&amp;search=' . urlencode(implode(', ', array_reverse($parent)));
+            } else {
+                 $update_places_url = 'admin_trees_places.php?ged=' . $WT_TREE->getNameHtml() . '&amp;search=';   
+            }
             echo '<div class="gm-options">';
             echo '<a href="module.php?mod=googlemap&amp;mod_action=admin_config">', I18N::translate('Google Maps™ preferences'), '</a>';
             echo ' | <a href="' . $adminplaces_url . '">' . I18N::translate('Geographic data') . '</a>';
@@ -2340,11 +2344,11 @@ class GoogleMapsModule extends AbstractModule implements ModuleConfigInterface, 
 
             global $pl_lati, $pl_long;
             if ($level >= 1) {
-                if(is_array($latlng)) {
-                  $pl_lati = strtr($latlng['pl_lati'], array('N' => '', 'S' => '-', ',' => '.')); // WT_placelocation lati
-                  $pl_long = strtr($latlng['pl_long'], array('E' => '', 'W' => '-', ',' => '.')); // WT_placelocation long
+	    	if(is_array($latlng)) {
+                  $pl_lati = strtr((string) $latlng['pl_lati'], array('N' => '', 'S' => '-', ',' => '.')); // WT_placelocation lati
+                  $pl_long = strtr((string) $latlng['pl_long'], array('E' => '', 'W' => '-', ',' => '.')); // WT_placelocation long
 
-                  // Check if Streetview location parameters are stored in database
+                // Check if Streetview location parameters are stored in database
                   $placeid  = $latlng['pl_id']; // Placelocation place id
                   $sv_lat   = $latlng['sv_lati']; // StreetView Point of View Latitude
                   $sv_lng   = $latlng['sv_long']; // StreetView Point of View Longitude
@@ -2352,15 +2356,15 @@ class GoogleMapsModule extends AbstractModule implements ModuleConfigInterface, 
                   $sv_pitch = $latlng['sv_elevation']; // StreetView Point of View Elevation (+90 to -90 degrees (+=down, -=up)
                   $sv_zoom  = $latlng['sv_zoom']; // StreetView Point of View Zoom (0, 1, 2 or 3)
 
-                  // Check if Street View Lati/Long are the default of 0, if so use regular Place Lati/Long to set an initial location for the panda
+                // Check if Street View Lati/Long are the default of 0, if so use regular Place Lati/Long to set an initial location for the panda
                   if ($latlng['sv_lati'] == 0 && $latlng['sv_long'] == 0) {
                           $sv_lat = $pl_lati;
                           $sv_lng = $pl_long;
                   }
-                }
-                else {
-                  $sv_lng = $sv_lat = $sv_dir = $sv_pitch = $sv_zoom = $placeid = NULL;
-                }
+		}
+		else {
+		  $sv_lng = $sv_lat = $sv_dir = $sv_pitch = $sv_zoom = $placeid = NULL;
+		}
                 $frameheight = $this->getSetting('GM_PH_YSIZE') + 35; // Add height of buttons
 
                 ?>
@@ -2587,7 +2591,7 @@ class GoogleMapsModule extends AbstractModule implements ModuleConfigInterface, 
 						url:    "https://maps.google.com/mapfiles/marker.png",
 						size:   new google.maps.Size(20, 34),
 						origin: new google.maps.Point(0,0),
-						anchor: new google.maps.Point(9, 34)
+						anchor: new google.maps.Point(9, 34)						
 					};
 				}
 				var posn = new google.maps.LatLng(0,0);

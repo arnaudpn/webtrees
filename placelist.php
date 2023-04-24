@@ -34,7 +34,11 @@ $action  = Filter::get('action', 'find|show', 'find');
 $display = Filter::get('display', 'hierarchy|list', 'hierarchy');
 $parent  = Filter::getArray('parent');
 
-$level = count($parent);
+if(isset($parent)) {
+	$level = count($parent);
+} else {
+	$level = 0;
+}
 
 if ($display == 'hierarchy') {
     if ($level) {
@@ -84,7 +88,11 @@ switch ($display) {
         $gm_module = Module::getModuleByName('googlemap');
 
         // Find this place and its ID
-        $place    = new Place(implode(', ', array_reverse($parent)), $WT_TREE);
+	if(is_array($parent)) {
+        	$place    = new Place(implode(', ', array_reverse($parent)), $WT_TREE);
+	} else {
+		$place    = new Place("", $WT_TREE);
+	}
         $place_id = $place->getPlaceId();
 
         $child_places = $place->getChildPlaces();
